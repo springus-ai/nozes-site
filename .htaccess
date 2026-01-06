@@ -1,0 +1,71 @@
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+# ErrorDocument 418 /418.php
+
+# Bloquear acesso às coisas do git
+RedirectMatch 404 /\.git.*
+RedirectMatch 404 /\.shhhh.*
+
+RewriteEngine on
+
+# Requests para /~[pasta]/[path] redirecionam para /projetos/visualizarResto.php?pasta=[pasta]&path=[path]
+# Se não houver path, redireciona para /projetos/visualizarResto.php?pasta=[pasta]
+RewriteRule ^~([^/]+)(/.*)?$ /projetos/visualizarResto.php?pasta=$1&path=$2 [L,QSA]
+
+# Projetos
+RewriteCond %{REQUEST_URI} !^/projetos/ver\.php$
+RewriteRule ^projetos/([0-9]+)/?$ /projetos/ver.php?id=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/projetos/editar\.php$
+RewriteRule ^projetos/([0-9]+)/editar/?$ /projetos/editar.php?id=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/projetos/zipar\.php$
+RewriteRule ^projetos/([0-9]+)/zipar/?$ /projetos/zipar.php?id=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/projetos/file\.php$
+RewriteRule ^projetos/([0-9]+)/([^/]+)$ /projetos/file.php?id=$1&filename=$2 [L,QSA]
+
+# Coleções
+RewriteCond %{REQUEST_URI} !^/colecoes/colecao\.php$
+RewriteRule ^colecoes/([0-9]+)/?$ /colecoes/colecao.php?id=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/colecoes/editar\.php$
+RewriteRule ^colecoes/([0-9]+)/editar/?$ /colecoes/editar.php?id=$1 [L,QSA]
+
+# Sidebárcios Cômicos eu acho (Forma de rss)
+RewriteRule ^projetos/feed\.xml?$ /feeds/proj.php?$1 [L,QSA]
+RewriteRule ^midia/feed\.xml?$ /feeds/proj.php?tipo=md [L,QSA]
+RewriteRule ^jogos/feed\.xml?$ /feeds/proj.php?tipo=jg [L,QSA]
+RewriteRule ^resto/feed\.xml?$ /feeds/proj.php?tipo=rt [L,QSA]
+RewriteRule ^blogs/feed\.xml?$ /feeds/proj.php?tipo=bg [L,QSA]
+RewriteRule ^downloadaveis/feed\.xml?$ /feeds/proj.php?tipo=dl [L,QSA]
+
+# Sidebárcios Cômicos eu acho
+RewriteRule ^projetos/?$ /lista.php?$1 [L,QSA]
+RewriteRule ^midia/?$ /lista.php?formato=grade&tipo=md [L,QSA]
+RewriteRule ^jogos/?$ /lista.php?tipo=jg [L,QSA]
+RewriteRule ^resto/?$ /lista.php?tipo=rt [L,QSA]
+RewriteRule ^blogs/?$ /lista.php?tipo=bg [L,QSA]
+RewriteRule ^downloadaveis/?$ /lista.php?tipo=dl [L,QSA]
+RewriteRule ^colecoes/?$ /colecoes/index.php [L,QSA]
+
+# Criar
+RewriteRule ^criar/?$ /projetos/criar.php [L]
+RewriteCond %{REQUEST_URI} !^/projetos/criar\.php$
+RewriteRule ^criar/((dl)|(jg)|(md)|(bg)|(rt))/?$ /projetos/criar.php?tipo=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/colecoes/criar\.php$
+RewriteRule ^criar/col/?$ /colecoes/criar.php [L,QSA]
+
+# Usuários
+RewriteCond %{REQUEST_URI} !^/usuarios/perfil\.php$
+RewriteRule ^usuarios/([^/]+)/?$ /usuarios/perfil.php?username=$1 [L,QSA]
+RewriteRule ^usuarios/?$ /usuarios.php [L]
+
+RewriteRule ^usuarios/([^/]+)/feed\.xml?$ /feeds/user.php?username=$1 [L,QSA]
+
+# Fóruns
+RewriteCond %{REQUEST_URI} !^/foruns/ver\.php$
+
+RewriteCond %{REQUEST_URI} !^/foruns/categoria\.php$
+RewriteRule ^foruns/([0-9]+)/feed\.xml?$ /feeds/forumCat.php?id=$1 [L,QSA]
+
+RewriteRule ^foruns/([0-9]+)/([0-9]+)/?$ /foruns/ver.php?id=$2&categoria=$1 [L,QSA]
+RewriteCond %{REQUEST_URI} !^/foruns/categoria\.php$
+RewriteRule ^foruns/([0-9]+)/?$ /foruns/categoria.php?id=$1 [L,QSA]
+RewriteRule ^foruns/postar/?$ /foruns/postar.php [L,QSA]
