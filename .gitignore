@@ -1,1 +1,9 @@
-/shhhh/config.php
+# Node
+/node_modules
+/package-lock.json
+
+# App
+/dist
+
+# Vercel
+.vercel
